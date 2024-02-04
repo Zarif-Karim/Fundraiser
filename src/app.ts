@@ -1,8 +1,9 @@
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import cors from 'koa2-cors';
-import Router from 'koa-router';
 import logger from 'koa-logger';
+
+import routes from './routes';
 
 const app = new Koa();
 const PORT = process.env.PORT || 3000;
@@ -13,13 +14,7 @@ app.use(cors({
     origin: '*'
 }));
 
-const router = new Router();
-
-router.get('/', async (ctx) => {
-    ctx.body = 'Hello World';
-});
-
-app.use(router.routes());
+app.use(routes.routes());
 
 const server = app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);

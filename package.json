@@ -1,0 +1,41 @@
+{
+  "name": "fundraiser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --build",
+    "start": "ts-node-dev --respawn --transpileOnly src/app.ts",
+    "test": "NODE_ENV=test PORT=7788 jest --runInBand",
+    "test:watch": "npm run test -- --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.15.0",
+    "koa-bodyparser": "^4.4.1",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^12.0.1",
+    "koa2-cors": "^2.0.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/koa": "^2.14.0",
+    "@types/koa-bodyparser": "^4.3.12",
+    "@types/koa-logger": "^3.1.5",
+    "@types/koa-router": "^7.4.8",
+    "@types/koa2-cors": "^2.0.5",
+    "@types/node": "^20.11.16",
+    "@types/supertest": "^6.0.2",
+    "husky": "^9.0.10",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "pretty-quick": "^4.0.0",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2",
+    "ts-node-dev": "^2.0.0"
+  }
+}

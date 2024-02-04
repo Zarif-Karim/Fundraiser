@@ -3,16 +3,15 @@ import bodyParser from 'koa-bodyparser';
 import cors from 'koa2-cors';
 import logger from 'koa-logger';
 
+import config from './config';
 import routes from './routes';
 
 const app = new Koa();
-const PORT = process.env.PORT || 3000;
+const PORT = config.PORT;
 
 app.use(bodyParser());
 app.use(logger());
-app.use(cors({
-    origin: '*'
-}));
+app.use(cors(config.CORS));
 
 app.use(routes.routes());
 

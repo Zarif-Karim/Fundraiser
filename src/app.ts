@@ -5,6 +5,7 @@ import logger from 'koa-logger';
 
 import config from './config';
 import routes from './routes';
+import attachServices from './attachServices';
 
 const app = new Koa();
 const PORT = config.PORT;
@@ -13,6 +14,7 @@ app.use(bodyParser());
 app.use(logger());
 app.use(cors(config.CORS));
 
+attachServices(app);
 app.use(routes.routes());
 
 const server = app

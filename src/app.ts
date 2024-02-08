@@ -15,10 +15,12 @@ app.use(cors(config.CORS));
 
 app.use(routes.routes());
 
-const server = app.listen(PORT, () => {
+const server = app
+  .listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
-}).on('error', (err) => {
+  })
+  .on('error', (err) => {
     console.error(err);
-});
+  });
 
 export default server;

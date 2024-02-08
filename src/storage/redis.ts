@@ -1,10 +1,10 @@
-import { IStorage } from "./types";
-import { createClient } from "redis";
+import { IStorage } from './types';
+import { createClient } from 'redis';
 
 export class RedisStorage implements IStorage {
   constructor(
     private client: ReturnType<typeof createClient>,
-    private logger: Console = console
+    private logger: Console = console,
   ) {}
 
   async get(key: string): Promise<string[]> {
@@ -14,7 +14,7 @@ export class RedisStorage implements IStorage {
     } catch (error) {
       this.logger.error({
         error,
-        operation: "RedisStorage.get",
+        operation: 'RedisStorage.get',
       });
       return [];
     }
@@ -27,7 +27,7 @@ export class RedisStorage implements IStorage {
     } catch (error) {
       this.logger.error({
         error,
-        operation: "RedisStorage.add",
+        operation: 'RedisStorage.add',
       });
       return false;
     }
@@ -40,7 +40,7 @@ export class RedisStorage implements IStorage {
     } catch (error) {
       this.logger.error({
         error,
-        operation: "RedisStorage.remove",
+        operation: 'RedisStorage.remove',
       });
       return false;
     }

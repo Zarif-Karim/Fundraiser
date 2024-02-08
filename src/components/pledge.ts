@@ -19,12 +19,16 @@ class Pledge {
     // status of pledge
     status: PledgeStatus;
 
+    // type of pledge
+    type: string;
+
     constructor(
         id: string,
         user: string,
         project: string,
         amount: number,
         status: PledgeStatus,
+        type: string,
     ) {
         this.id = id;
         this.user = user;
@@ -32,6 +36,7 @@ class Pledge {
         this.amount = amount;
         this.createdAt = new Date();
         this.status = status;
+        this.type = type;
     }
 
     info() {
@@ -42,6 +47,7 @@ class Pledge {
             amount: this.amount,
             createdAt: this.createdAt,
             status: this.status,
+            type: this.type,
         };
     }
 }

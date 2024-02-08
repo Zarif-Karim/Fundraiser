@@ -67,5 +67,10 @@
       "/node_modules/",
       "/dist/"
     ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "tabWidth": 4
   }
 }

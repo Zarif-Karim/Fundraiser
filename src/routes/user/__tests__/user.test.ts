@@ -1,6 +1,11 @@
 import request from 'supertest';
 import server from '../../../app';
 
+afterEach((done) => {
+  server.close();
+  done();
+});
+
 describe('User Routes', () => {
   describe('create', () => {
     it('POST /api/v1/user/create - should return 201 with user info when user created', async () => {

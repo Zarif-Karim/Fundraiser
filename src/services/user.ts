@@ -1,7 +1,9 @@
+import { User } from "../components/user";
+import { UserStore } from "../storage/user";
+
 export class UserService {
     constructor(
-        // TODO: implement store
-        private readonly userStore: any
+        private readonly userStore: UserStore
     ) {}
 
   async get(id: string) {
@@ -14,8 +16,8 @@ export class UserService {
     }
 
     const user = new User(id, name, email, phone, address);
-    const result = await this.userStore.create(user.info());
-    if(!result.ok) {
+    const success = await this.userStore.create(user);
+    if(!success) {
         throw new Error('Failed to create user');
     }
 

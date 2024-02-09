@@ -1,6 +1,7 @@
-import { Context } from 'koa';
+import { User } from '../../components/user';
+import { ExtendedContext } from '../../context';
 
-export const createHandler = async (ctx: Context) => {
+export const createHandler = async (ctx: ExtendedContext) => {
   // temporary until we have uuid
   const idFromParams = ctx.params.id ?? '';
 
@@ -12,8 +13,8 @@ export const createHandler = async (ctx: Context) => {
     return;
   }
 
-  const { name, email, address, phone } = validatedFields;
   // check for duplication
+  const { name, email, address, phone } = validatedFields;
   const existingUser = await ctx.userService.getByEmail(email);
   if (existingUser) {
     ctx.status = 409;
@@ -22,9 +23,22 @@ export const createHandler = async (ctx: Context) => {
   }
 
   // create user
-  const newUser = await ctx.userService.create(name, email, phone, address, idFromParams);
-  // return: user? success? what?
-  throw new Error('Not implemented');
+  try {
+    const newUser = await ctx.userService.create(
+      name,
+      email,
+      phone,
+      address,
+      idFromParams,
+    );
+
+    ctx.status = 201;
+    ctx.body = newUser;
+  } catch (err) {
+    ctx.status = 500;
+    ctx.body = { message: 'Failed to create user' };
+    ctx.loggers.error({ err, operation: 'createUserHandler' });
+  }
 };
 
 /**
@@ -32,7 +46,9 @@ export const createHandler = async (ctx: Context) => {
  * @param ctx: Koa Context soon to be extended
  * @returns validated body or undefined
  */
-function validateRequest(ctx: Context): ValidationSuccess | ValidationFailure {
+function validateRequest(
+  ctx: ExtendedContext,
+): ValidationSuccess | ValidationFailure {
   const { name, email, address, phone } = ctx.request.body as User;
 
   if (!name || !email || !phone) {

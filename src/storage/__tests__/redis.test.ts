@@ -1,21 +1,15 @@
 import { RedisStorage } from '../redis';
-import { createClient } from 'redis';
-import config from '../../config';
 
-let client: ReturnType<typeof createClient>;
 let storage: RedisStorage;
 const keysToRemove: string[] = [];
 
 beforeAll(async () => {
-  client = await createClient(config.REDIS)
-    .on('error', (error) => console.error(error))
-    .connect();
-  storage = new RedisStorage(client);
+  storage = new RedisStorage();
 });
 
 afterAll(async () => {
-  await client.del(keysToRemove);
-  await client.disconnect();
+  await storage.batchRemove(keysToRemove);
+  await storage.disconnect();
 });
 
 describe('get', () => {

@@ -5,7 +5,7 @@ export class UserStore {
   constructor(private store: RedisStorage) {}
 
   async create(user: User) {
-    return await this.store.add('users', JSON.stringify(user.info()));
+    return await this.store.add(`users_${user.id}`, JSON.stringify(user.info()));
   }
 
   getUsers() {

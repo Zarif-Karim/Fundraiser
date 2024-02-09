@@ -1,9 +1,9 @@
 import { User } from '../../components/user';
 import { ExtendedContext } from '../../context';
 
-export const createHandler = async (ctx: ExtendedContext) => {
+export async function createHandler(ctx: ExtendedContext) {
   // temporary until we have uuid
-  const idFromParams = ctx.params.id ?? '';
+  const { id } = ctx.request.body as any;
 
   // validate request
   const validatedFields = validateRequest(ctx);
@@ -29,7 +29,7 @@ export const createHandler = async (ctx: ExtendedContext) => {
       email,
       phone,
       address,
-      idFromParams,
+      id,
     );
 
     ctx.status = 201;
@@ -37,7 +37,7 @@ export const createHandler = async (ctx: ExtendedContext) => {
   } catch (err) {
     ctx.status = 500;
     ctx.body = { message: 'Failed to create user' };
-    ctx.loggers.error({ err, operation: 'createUserHandler' });
+    ctx.logger.error({ err, operation: 'createUserHandler' });
   }
 };
 

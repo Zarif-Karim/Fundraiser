@@ -27,4 +27,9 @@ router.use('/storage', storage.routes());
  *
  */
 
-export default router;
+const v1Router = new Router();
+v1Router.use('/v1', router.routes());
+
+const apiRouter = new Router();
+apiRouter.use('/api', v1Router.routes());
+export default apiRouter;

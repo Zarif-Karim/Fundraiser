@@ -17,6 +17,7 @@ router.delete('/delete', async (ctx) => {
 router.get(['/:id', '/healthcheck'], async (ctx) => {
   ctx.body = 'ok';
 });
+
 router.get('/batch', async (ctx) => {
   ctx.body = 'batch';
 });

@@ -1,5 +1,5 @@
 import config from '../config';
-import { IStorage } from './types';
+import { IStorage, IStorageKey, IStorageValue } from './types';
 import { createClient } from 'redis';
 
 export class RedisStorage implements IStorage {
@@ -16,22 +16,22 @@ export class RedisStorage implements IStorage {
     await this.client.disconnect();
   }
 
-  async get(key: string): Promise<string[]> {
+  async get(key: IStorageKey): Promise<IStorageValue> {
     if (!this.client) await this.connect();
 
     try {
-      const values = await this.client.lRange(key, 0, -1);
+      const values = await this.client.hGetAll(key);
       return values;
     } catch (error) {
       this.logger.error({
         error,
         operation: 'RedisStorage.get',
       });
-      return [];
+      return {};
     }
   }
 
-  async add(key: string, value: { [key: string]: string | number }): Promise<boolean> {
+  async add(key: IStorageKey, value: IStorageValue): Promise<boolean> {
     if (!this.client) await this.connect();
 
     try {
@@ -46,7 +46,7 @@ export class RedisStorage implements IStorage {
     }
   }
 
-  async remove(key: string, value: string): Promise<boolean> {
+  async remove(key: string): Promise<boolean> {
     if (!this.client) await this.connect();
 
     try {

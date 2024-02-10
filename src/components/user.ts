@@ -28,13 +28,13 @@ export class User {
     this.phone = phone;
   }
 
-  info() {
+  info(): { [key: string]: string } {
     return {
       id: this.id,
       name: this.name,
       email: this.email,
       phone: this.phone,
-      address: this.address,
+      address: this.address || '',
     };
   }
 }

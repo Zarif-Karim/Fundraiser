@@ -12,7 +12,7 @@ export class UserStore {
   async create(user: User) {
     return await this.store.add(
       this.createKey(user.id),
-      JSON.stringify(user.info()),
+      user.info(),
     );
   }
 

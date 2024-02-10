@@ -31,11 +31,11 @@ export class RedisStorage implements IStorage {
     }
   }
 
-  async add(key: string, value: string): Promise<boolean> {
+  async add(key: string, value: { [key: string]: string | number }): Promise<boolean> {
     if (!this.client) await this.connect();
 
     try {
-      const successCount = await this.client.rPush(key, value);
+      const successCount = await this.client.hSet(key, value);
       return successCount > 0;
     } catch (error) {
       this.logger.error({

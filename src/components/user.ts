@@ -1,4 +1,4 @@
-class User {
+export class User {
   // unique identifier
   id: string;
 

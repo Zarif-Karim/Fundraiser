@@ -1,7 +1,8 @@
 import Router from 'koa-router';
 import { createHandler } from './createHandler';
+import { ExtendedContext } from '../../context';
 
-const router = new Router();
+const router = new Router<unknown, ExtendedContext>();
 
 router.post('/create', createHandler);
 

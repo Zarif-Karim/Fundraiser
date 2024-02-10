@@ -1,10 +1,15 @@
 import Koa from 'koa';
 import { UserService } from './services/user';
-import { ExtentedContext } from './context';
+import { ExtendedContext } from './context';
+import { RedisStorage } from './storage/redis';
+import { UserStore } from './storage/user';
 
-export default function attachServices(app: Koa): void {
-    const context = app.context as ExtentedContext;
+export default function attachServices(app: Koa) {
+    const context = app.context as ExtendedContext;
 
-    // TODO: implement the services storage
-    app.context.userServices = new UserService({});
+    context.logger = console;
+
+    const redisStorage = new RedisStorage();
+    const userStore = new UserStore(redisStorage);
+    context.userService = new UserService(userStore);
 }

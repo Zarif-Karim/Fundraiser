@@ -46,12 +46,12 @@ export class RedisStorage implements IStorage {
     }
   }
 
-  async remove(key: IStorageKey, valueKeys: IStorageKey[]): Promise<boolean> {
+  async remove(key: IStorageKey): Promise<boolean> {
     if (!this.client) await this.connect();
 
     try {
-      const successCount = await this.client.hDel(key, valueKeys);
-      return successCount === valueKeys.length;
+      const successCount = await this.client.del(key);
+      return successCount > 0;
     } catch (error) {
       this.logger.error({
         error,
@@ -66,10 +66,11 @@ export class RedisStorage implements IStorage {
 
     try {
       const successCount = await this.client.del(key);
-      return successCount > 0;
+      return successCount === key.length;
     } catch (error) {
       this.logger.error({
         error,
+        key,
         operation: 'RedisStorage.batchRemove',
       });
       return false;

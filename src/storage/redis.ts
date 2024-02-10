@@ -46,6 +46,25 @@ export class RedisStorage implements IStorage {
     }
   }
 
+  async update(key: IStorageKey, value: IStorageValue): Promise<boolean> {
+    if (!this.client) await this.connect();
+
+    try {
+      const jobs: Promise<number>[] = [];
+      Object.keys(value).forEach((field: string) => {
+        jobs.push(this.client.hSet(key, field, value[field]));
+      });
+      await Promise.all(jobs);
+      return true;
+    } catch (error) {
+      this.logger.error({
+        error,
+        operation: 'RedisStorage.update',
+      });
+      return false;
+    }
+  }
+
   async remove(key: IStorageKey): Promise<boolean> {
     if (!this.client) await this.connect();
 

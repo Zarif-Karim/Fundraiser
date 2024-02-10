@@ -1,9 +1,9 @@
 import { User } from '../../components/user';
 import { ExtendedContext } from '../../context';
+import { uuidv4 } from 'lib0/random';
 
 export async function createHandler(ctx: ExtendedContext) {
-  // temporary until we have uuid
-  const { id } = ctx.request.body as any;
+  const id = uuidv4();
 
   // validate request
   const validatedFields = validateRequest(ctx);

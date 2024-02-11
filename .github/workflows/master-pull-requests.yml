@@ -14,6 +14,14 @@ jobs:
     default:
         name: All-in-one
         runs-on: ubuntu-latest
+
+        services:
+            redis:
+                image: redis:5.0.5
+                options: --entrypoint redis-server
+                ports:
+                    - 6379:6379
+
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v2

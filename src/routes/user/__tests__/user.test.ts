@@ -20,7 +20,10 @@ describe('User Routes', () => {
         .send(userData);
 
       expect(response.status).toEqual(201);
-      expect(response.body).toEqual(expect.objectContaining(userData));
+      expect(response.body).toEqual({
+        ...userData,
+        id: expect.any(String),
+      });
     });
   });
 });

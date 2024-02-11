@@ -20,6 +20,8 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
+  if(keysToRemove.length === 0) return;
+
   await redisStorage.batchRemove(keysToRemove);
   keysToRemove.length = 0;
 });
@@ -33,7 +35,6 @@ describe('RedisStorage', () => {
       expect(success).toBe(true);
 
       const result = await redisStorage.get(key);
-      console.log(result);
       expect(result).toEqual(value);
     });
   });

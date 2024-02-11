@@ -51,9 +51,9 @@ export class RedisStorage implements IStorage {
 
     try {
       const jobs: Promise<number>[] = [];
-      Object.keys(value).forEach((field: string) => {
+      for(const field in value) {
         jobs.push(this.client.hSet(key, field, value[field]));
-      });
+      }
       await Promise.all(jobs);
       return true;
     } catch (error) {

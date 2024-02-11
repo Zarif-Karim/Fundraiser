@@ -4,8 +4,8 @@ import { UserStore } from '../storage/user';
 export class UserService {
     constructor(private readonly userStore: UserStore) {}
 
-    async get(id: string) {
-        return;
+    async get(id: string): Promise<User | undefined> {
+        return undefined;
     }
 
     async create(

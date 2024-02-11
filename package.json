@@ -8,7 +8,9 @@
     "start": "ts-node-dev src/app.ts",
     "test": "NODE_ENV=test PORT=7788 jest --runInBand --forceExit",
     "test:watch": "npm run test -- --watch",
-    "format": "prettier --write 'src/**/*.ts'"
+    "format:staged": "pretty-quick --staged",
+    "format:all": "prettier --write 'src/**/*.ts'",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -73,12 +75,14 @@
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all",
-    "tabWidth": 4
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged",
-      "pre-push": "npm run test"
-    }
+    "tabWidth": 4,
+    "overrides": [
+      {
+        "files": "*.json",
+        "options": {
+          "tabWidth": 2
+        }
+      }
+    ]
   }
 }

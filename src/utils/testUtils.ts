@@ -1,12 +1,12 @@
-import { NoLogConsole } from "./noLoggerConsole";
+import { NoLogConsole } from './noLoggerConsole';
 
 export const noConsoleLogForTest = () => {
-  const originalConsole = console;
-  beforeAll(() => {
-    console = NoLogConsole;
-  });
+    const originalConsole = console;
+    beforeAll(() => {
+        console = NoLogConsole;
+    });
 
-  afterAll(() => {
-    console = originalConsole;
-  });
+    afterAll(() => {
+        console = originalConsole;
+    });
 };

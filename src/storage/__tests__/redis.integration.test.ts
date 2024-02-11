@@ -1,6 +1,8 @@
-import { after } from 'node:test';
 import { RedisStorage } from '../redis';
 import { User } from '../../components/user';
+import { noConsoleLogForTest } from '../../utils/testUtils';
+
+noConsoleLogForTest();
 
 let redisStorage: RedisStorage;
 const keysToRemove: string[] = [];

@@ -1,5 +1,8 @@
 import server from '../../app';
 import request from 'supertest';
+import { noConsoleLogForTest } from '../../utils/testUtils';
+
+noConsoleLogForTest();
 
 afterEach((done) => {
   server.close();

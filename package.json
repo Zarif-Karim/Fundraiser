@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --build",
+    "start:built": "node dist/app.js",
     "start": "ts-node-dev src/app.ts",
     "test": "NODE_ENV=test PORT=7788 jest --runInBand --forceExit",
     "test:watch": "npm run test -- --watch",

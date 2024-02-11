@@ -2,14 +2,18 @@ import { ExtendedContext } from '../../context';
 
 export async function getHandler(ctx: ExtendedContext) {
     const { id } = ctx.params;
-    const user = await ctx.userService.get(id);
-    if (!user) {
+
+    try {
+        const user = await ctx.userService.get(id);
+
+        ctx.status = 200;
+        ctx.body = user;
+    } catch (err) {
         ctx.status = 404;
-        ctx.body = 'User not found';
-        return;
+        ctx.body = (err as Error).message;
+
+        ctx.logger.error({ err, operation: 'getUserHandler' });
     }
 
-    ctx.status = 200;
-    ctx.body = user;
     return;
 }

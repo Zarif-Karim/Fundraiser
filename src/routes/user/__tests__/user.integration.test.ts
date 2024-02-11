@@ -29,4 +29,28 @@ describe('User Routes', () => {
             });
         });
     });
+
+    describe('get', () => {
+        it('GET /api/v1/user/:id - should return 200 with user info when user found', async () => {
+            // create a user
+            const userData = {
+                name: 'John Doe',
+                email: 'john@email.com',
+                phone: '1234567890',
+                address: '123 Main St',
+            };
+
+            const createResponse = await request(server)
+                .post('/api/v1/user/create')
+                .send(userData);
+
+            // get the user
+            const response = await request(server).get(
+                `/api/v1/user/${createResponse.body.id}`,
+            );
+
+            expect(response.status).toEqual(200);
+            expect(response.body).toEqual(createResponse.body);
+        });
+    });
 });

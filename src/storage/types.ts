@@ -1,5 +1,5 @@
 export type IStorageKey = string;
-export type IStorageValue = { [key: string]: string | number };
+export type IStorageValue = { [key: string]: string };
 
 export interface IStorage {
     get: (key: IStorageKey) => Promise<IStorageValue>;

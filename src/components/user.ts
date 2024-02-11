@@ -1,3 +1,5 @@
+import { IStorageValue } from '../storage/types';
+
 export class User {
     // unique identifier
     id: string;
@@ -36,5 +38,15 @@ export class User {
             phone: this.phone,
             address: this.address || '',
         };
+    }
+
+    static fromDatabase(data: IStorageValue): User {
+        return new User(
+            data.id,
+            data.name,
+            data.email,
+            data.phone,
+            data.address,
+        );
     }
 }

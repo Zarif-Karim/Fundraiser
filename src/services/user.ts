@@ -5,7 +5,13 @@ export class UserService {
     constructor(private readonly userStore: UserStore) {}
 
     async get(id: string): Promise<User | undefined> {
-        return undefined;
+        const userData = await this.userStore.get(id);
+
+        if (!userData) {
+            throw new Error('User not found');
+        }
+
+        return User.fromDatabase(userData);
     }
 
     async create(

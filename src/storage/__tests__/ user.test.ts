@@ -29,4 +29,33 @@ describe('UserStore', () => {
             expect(success).toBe(val);
         });
     });
+
+    describe('get', () => {
+        it('calls the store with the provided id', async () => {
+            // Arrange
+            store.get = jest.fn().mockResolvedValue({});
+            // Act
+            await userStore.get('1');
+            // Assert
+            expect(store.get).toHaveBeenCalledWith('users:1');
+        });
+
+        it('returns undefined if the user is not found', async () => {
+            // Arrange
+            store.get = jest.fn().mockResolvedValue({});
+            // Act
+            const user = await userStore.get('1');
+            // Assert
+            expect(user).toBeUndefined();
+        });
+
+        it('returns the user if found', async () => {
+            // Arrange
+            store.get = jest.fn().mockResolvedValue(dummyUser.info());
+            // Act
+            const user = await userStore.get('1');
+            // Assert
+            expect(user).toEqual(dummyUser.info());
+        });
+    });
 });

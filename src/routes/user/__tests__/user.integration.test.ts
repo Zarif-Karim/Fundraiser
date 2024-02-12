@@ -52,5 +52,15 @@ describe('User Routes', () => {
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(createResponse.body);
         });
+
+        it('GET /api/v1/user/:id - should return 404 user not found', async () => {
+            const noUserId = 'bogus-id';
+            const response = await request(server).get(
+                `/api/v1/user/${noUserId}`,
+            );
+
+            expect(response.status).toEqual(404);
+            expect(response.text).toEqual('User not found');
+        });
     });
 });

@@ -39,4 +39,37 @@ describe('UserService', () => {
             });
         });
     });
+
+    describe('get', () => {
+        it('should throw an error if user is not found', async () => {
+            mockUserStore.get = jest.fn().mockResolvedValue(undefined);
+            await expect(userService.get('id')).rejects.toThrow(
+                'User not found',
+            );
+        });
+
+        it('should call the user store with the provided id', async () => {
+            mockUserStore.get = jest.fn().mockResolvedValue({});
+            await userService.get('id');
+            expect(mockUserStore.get).toHaveBeenCalledWith('id');
+        });
+
+        it('should return the user if found', async () => {
+            mockUserStore.get = jest.fn().mockResolvedValue({
+                id: 'id',
+                name: 'name',
+                email: 'email',
+                phone: 'phone',
+                address: 'address',
+            });
+            const user = await userService.get('id');
+            expect(user).toEqual({
+                id: 'id',
+                name: 'name',
+                email: 'email',
+                phone: 'phone',
+                address: 'address',
+            });
+        });
+    });
 });

@@ -1,6 +1,7 @@
 import Router from 'koa-router';
 import { createHandler } from './createHandler';
 import { ExtendedContext } from '../../context';
+import { getHandler } from './getHandler';
 
 const router = new Router<unknown, ExtendedContext>();
 
@@ -14,9 +15,7 @@ router.delete('/delete', async (ctx) => {
     ctx.body = 'delete';
 });
 
-router.get(['/:id', '/healthcheck'], async (ctx) => {
-    ctx.body = 'ok';
-});
+router.get('/:id', getHandler);
 
 router.get('/batch', async (ctx) => {
     ctx.body = 'batch';

@@ -1,7 +1,8 @@
 import { Context } from 'koa';
 import { UserService } from './services/user';
+import { Logger } from './utils/logger';
 
 export interface ExtendedContext extends Context {
-    logger: Console;
+    logger: Logger;
     userService: UserService;
 }

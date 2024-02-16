@@ -20,7 +20,9 @@ app.use(routes.routes());
 
 const server = app
     .listen(PORT, () => {
-        app.context.logger.log(`Server is running at http://localhost:${PORT}`);
+        app.context.logger.info(
+            `Server is running at http://localhost:${PORT}`,
+        );
     })
     .on('error', (err) => {
         app.context.logger.error(err);

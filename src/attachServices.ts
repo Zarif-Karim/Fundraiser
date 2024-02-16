@@ -1,16 +1,17 @@
 import Koa from 'koa';
 import { UserService } from './services/user';
 import { ExtendedContext } from './context';
-import { RedisStorage } from './storage/redis';
+import { PostgresClient } from './storage/postgres';
 import { UserStore } from './storage/user';
 import { NoLogConsole } from './utils/noLoggerConsole';
+import config from './config';
 
 export default function attachServices(app: Koa<unknown, ExtendedContext>) {
-    const context = app.context as ExtendedContext;
+    const ctx = app.context as ExtendedContext;
 
-    context.logger = process.env.NODE_ENV === 'test' ? NoLogConsole : console;
+    ctx.logger = process.env.NODE_ENV === 'test' ? NoLogConsole : console;
 
-    const redisStorage = new RedisStorage();
-    const userStore = new UserStore(redisStorage);
-    context.userService = new UserService(userStore);
+    const postgresStorage = new PostgresClient(config.POSTGRES, ctx.logger);
+    const userStore = new UserStore(postgresStorage);
+    ctx.userService = new UserService(userStore);
 }

@@ -1,4 +1,4 @@
-import type { IStorage } from './types';
+import type { PostgresGetPayload } from './types';
 import { type DatabasePool, createPool, sql } from 'slonik';
 import type { IPostgresConfig } from '../config';
 import { Logger } from '../utils/logger';
@@ -11,7 +11,7 @@ export class PostgresClient {
         private logger: Logger = console,
     ) {}
 
-    async connect() {
+    private async connect() {
         if (this.pool) return;
 
         this.logger.info('[POSTGRES]: Starting connection');
@@ -21,7 +21,7 @@ export class PostgresClient {
         this.logger.info('[POSTGRES]: Connection established');
     }
 
-    async get(query: string, params: any[] = []): Promise<any> {
+    async get(query: string, params: any[] = []): Promise<PostgresGetPayload> {
         await this.connect();
 
         try {
@@ -32,7 +32,7 @@ export class PostgresClient {
                 error,
                 operation: 'PostgresClient.get',
             });
-            return {};
+            return undefined;
         }
     }
 

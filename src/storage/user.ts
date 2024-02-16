@@ -1,28 +1,40 @@
 import { User } from '../components/user';
-import { RedisStorage } from './redis';
-import { IStorageValue } from './types';
+import { PostgresClient } from './postgres';
 
-const isEmptyObject = (obj: Object) => {
-    return !obj || Object.keys(obj).length === 0;
-};
+const TABLE_NAME = 'users';
 
 export class UserStore {
-    prefixKey = 'users';
-    constructor(private store: RedisStorage) {}
+    constructor(private store: PostgresClient) {}
 
-    private createKey(key: string) {
-        return `${this.prefixKey}:${key}`;
-    }
-
-    async create(user: User): Promise<boolean> {
-        return await this.store.add(this.createKey(user.id), user.info());
-    }
-
-    async get(id: string): Promise<IStorageValue | undefined> {
-        const user = await this.store.get(this.createKey(id));
-        if (isEmptyObject(user)) {
+    async create(
+        id: string,
+        name: string,
+        email: string,
+        phone: string,
+        address: string,
+    ): Promise<User | undefined> {
+        const success = await this.store.add(createUserQuery, [
+            id,
+            name,
+            email,
+            phone,
+            address,
+        ]);
+        if (!success) {
             return undefined;
         }
-        return user;
+        return new User(id, name, email, phone, address);
+    }
+
+    async get(id: string): Promise<User | undefined> {
+        const user = await this.store.get(getSingleUserByIdQuery, [id]);
+        if (!user) {
+            return undefined;
+        }
+        return User.fromDatabase(user);
     }
 }
+
+// SQL queries
+const createUserQuery = `INSERT INTO ${TABLE_NAME} (id, name, email, phone, address, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW())`;
+const getSingleUserByIdQuery = `SELECT * FROM ${TABLE_NAME} WHERE id = $1`;

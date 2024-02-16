@@ -1,10 +1,7 @@
 import { User } from '../../components/user';
 import { ExtendedContext } from '../../context';
-import { uuidv4 } from 'lib0/random';
 
 export async function createHandler(ctx: ExtendedContext) {
-    const id = uuidv4();
-
     // validate request
     const validatedFields = validateRequest(ctx);
     if (!validatedFields.success) {
@@ -28,8 +25,7 @@ export async function createHandler(ctx: ExtendedContext) {
             name,
             email,
             phone,
-            address,
-            id,
+            address || '',
         );
 
         ctx.status = 201;

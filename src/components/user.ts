@@ -1,5 +1,3 @@
-import { IStorageValue } from '../storage/types';
-
 export class User {
     // unique identifier
     id: string;
@@ -40,7 +38,7 @@ export class User {
         };
     }
 
-    static fromDatabase(data: IStorageValue): User {
+    static fromDatabase(data: Record<string, string>): User {
         return new User(
             data.id,
             data.name,

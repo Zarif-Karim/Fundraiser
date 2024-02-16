@@ -1,29 +1,25 @@
 import Router from 'koa-router';
 import { ExtendedContext } from '../context';
-import { RedisStorage } from '../storage/redis';
-import { IStorageKey, IStorageValue } from '../storage/types';
 import { User } from '../components/user';
 
 const router = new Router<unknown, ExtendedContext>();
 
-// routes for storage testing
-const redisStorage = new RedisStorage();
-
-router.get('/redis/get/:id', async (ctx: ExtendedContext) => {
+router.get('/storage/get/:id', async (ctx: ExtendedContext) => {
     const id = ctx.params.id;
-    const result = await redisStorage.get(id);
+    const result = await ctx.userService.get(id);
 
     ctx.body = result;
     return;
 });
 
-router.post('/redis/add', async (ctx: ExtendedContext) => {
-    const { id, value } = ctx.request.body as {
-        id: IStorageKey;
-        value: IStorageValue;
-    };
-
-    const success = await redisStorage.add(id, value);
+router.post('/storage/add', async (ctx: ExtendedContext) => {
+    const { name, email, phone, address } = ctx.request.body as User;
+    const success = await ctx.userService.create(
+        name,
+        email,
+        phone,
+        address || '',
+    );
     if (!success) {
         ctx.status = 500;
         ctx.body = 'Failed to add to redis';
@@ -35,10 +31,10 @@ router.post('/redis/add', async (ctx: ExtendedContext) => {
     return;
 });
 
-router.delete('/redis/remove/:id', async (ctx: ExtendedContext) => {
+router.delete('/storage/remove/:id', async (ctx: ExtendedContext) => {
     const id = ctx.params.id;
 
-    const success = await redisStorage.remove(id);
+    const success = await ctx.userService.delete(id);
 
     if (!success) {
         ctx.status = 500;

@@ -30,7 +30,7 @@ const config: IConfig = {
         port: Number(process.env.POSTGRES_PORT) || 5432,
         username: process.env.POSTGRES_USERNAME || 'zkarim',
         password: process.env.POSTGRES_PASSWORD || 'postgres',
-        database: process.env.POSTGRES_DB || 'postgres',
+        database: process.env.POSTGRES_DB || 'fundraiser',
     },
 };
 

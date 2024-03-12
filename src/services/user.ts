@@ -15,21 +15,15 @@ export class UserService {
         return user;
     }
 
-    async create(
-        name: string,
-        email: string,
-        phone: string,
-        address: string,
-    ): Promise<User> {
+    // for debugging only: admin use
+    async getAll(): Promise<User[]> {
+        return await this.userStore.getAll();
+    }
+
+    async create(userDetails: Omit<User, 'id'>): Promise<User> {
         const id = uuidv4();
 
-        const user = await this.userStore.create(
-            id,
-            name,
-            email,
-            phone,
-            address,
-        );
+        const user = await this.userStore.create(id, userDetails);
         if (!user) {
             throw new Error('Failed to create user');
         }

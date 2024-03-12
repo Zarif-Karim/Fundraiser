@@ -11,9 +11,6 @@ export interface IConfig {
     CORS: {
         origin: string;
     };
-    REDIS: {
-        url: string;
-    };
     POSTGRES: IPostgresConfig;
 }
 
@@ -21,9 +18,6 @@ const config: IConfig = {
     PORT: Number(process.env.PORT) || 3000,
     CORS: {
         origin: '*',
-    },
-    REDIS: {
-        url: process.env.REDIS_URL || 'redis://localhost:6379',
     },
     POSTGRES: {
         host: process.env.POSTGRES_HOST || 'localhost',

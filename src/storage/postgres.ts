@@ -45,9 +45,7 @@ export class PostgresClient {
         await this.connect();
 
         try {
-            const result = await this.pool.any(query);
-            console.log('getAllFromTable', result);
-            return result;
+            return await this.pool.any(query);
         } catch (error) {
             this.logger.error({
                 error,

@@ -2,11 +2,12 @@ export type PostgresGetPayload = ErrorUndefinedType | UserTablePayload;
 
 export type UserTablePayload = {
     id: string;
+    name: string;
     email: string;
-    password: string;
+    phone: string;
     address: string;
-    created_at: string;
-    updated_at: string;
+    createdAt: string;
+    updatedAt: string;
 };
 
 export type ErrorUndefinedType = undefined;

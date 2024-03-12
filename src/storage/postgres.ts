@@ -1,5 +1,11 @@
 import type { PostgresGetPayload } from './types';
-import { type DatabasePool, createPool, sql } from 'slonik';
+import {
+    type DatabasePool,
+    createPool,
+    sql,
+    Query,
+    QuerySqlToken,
+} from 'slonik';
 import type { IPostgresConfig } from '../config';
 import { Logger } from '../utils/logger';
 
@@ -11,21 +17,22 @@ export class PostgresClient {
         private logger: Logger = console,
     ) {}
 
-    private async connect() {
+    async connect() {
         if (this.pool) return;
 
         this.logger.info('[POSTGRES]: Starting connection');
         const { host, port, username, password, database } = this.config;
         const connectionString = `postgresql://${username}:${password}@${host}:${port}/${database}`;
+        console.log('[POSTGRES]: connectionString:', connectionString);
         this.pool = await createPool(connectionString);
         this.logger.info('[POSTGRES]: Connection established');
     }
 
-    async get(query: string, params: any[] = []): Promise<PostgresGetPayload> {
+    async get(query: QuerySqlToken): Promise<PostgresGetPayload> {
         await this.connect();
 
         try {
-            const result = await this.pool.one(sql.unsafe`${query}`, params);
+            const result = await this.pool.one(query);
             return result;
         } catch (error) {
             this.logger.error({
@@ -36,11 +43,30 @@ export class PostgresClient {
         }
     }
 
-    async add(query: string, params: any[] = []): Promise<boolean> {
+    // only for debugging purposes
+    async getAllFromTable(
+        query: QuerySqlToken,
+    ): Promise<readonly PostgresGetPayload[]> {
         await this.connect();
 
         try {
-            await this.pool.query(sql.unsafe`${query}`, params);
+            const result = await this.pool.any(query);
+            console.log('getAllFromTable', result);
+            return result;
+        } catch (error) {
+            this.logger.error({
+                error,
+                operation: 'PostgresClient.getAll',
+            });
+            return [];
+        }
+    }
+
+    async add(query: QuerySqlToken): Promise<boolean> {
+        await this.connect();
+
+        try {
+            await this.pool.query(query);
             return true;
         } catch (error) {
             this.logger.error({

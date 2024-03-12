@@ -12,6 +12,7 @@ export class PostgresClient {
         private logger: Logger = console,
     ) {}
 
+    // Should only run once for the very first operation.
     async connect() {
         if (this.pool) return;
 
@@ -19,8 +20,12 @@ export class PostgresClient {
         const { host, port, username, password, database } = this.config;
         const connectionString = `postgresql://${username}:${password}@${host}:${port}/${database}`;
         console.log('[POSTGRES]: connectionString:', connectionString);
+        this.logger.info('[POSTGRES]: Establish Connection - STARTED');
         this.pool = await createPool(connectionString);
-        this.logger.info('[POSTGRES]: Connection established');
+        this.logger.info('[POSTGRES]: Establish Connection - FINISHED');
+        this.logger.info('[POSTGRES]: Running Migrations - STARTED');
+        await this.runMigrations();
+        this.logger.info('[POSTGRES]: Running Migrations - COMPLETED');
     }
 
     async get(query: QuerySqlToken): Promise<PostgresGetPayload> {

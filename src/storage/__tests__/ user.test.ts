@@ -3,8 +3,6 @@ import { PostgresClient } from '../postgres';
 import { User } from '../../components/user';
 import config from '../../config';
 
-jest.mock('../redis');
-
 const store = new PostgresClient(config.POSTGRES);
 
 // TODO: need to fix test logic

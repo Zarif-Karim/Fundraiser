@@ -56,12 +56,12 @@ router.delete('/remove/:id', async (ctx: ExtendedContext) => {
 
     if (!success) {
         ctx.status = 500;
-        ctx.body = 'Failed to delete from redis';
+        ctx.body = 'Failed to delete from postgres';
         return;
     }
 
     ctx.status = 204;
-    ctx.body = 'Deleted from redis';
+    ctx.body = 'Deleted from postgres';
     return;
 });
 

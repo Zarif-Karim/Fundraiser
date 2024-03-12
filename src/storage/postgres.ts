@@ -1,13 +1,8 @@
 import type { PostgresGetPayload } from './types';
-import {
-    type DatabasePool,
-    createPool,
-    sql,
-    Query,
-    QuerySqlToken,
-} from 'slonik';
+import { type DatabasePool, createPool, sql, QuerySqlToken } from 'slonik';
 import type { IPostgresConfig } from '../config';
 import { Logger } from '../utils/logger';
+import { migrations } from './migrations';
 
 // export class PostgresClient implements IStorage {
 export class PostgresClient {
@@ -89,6 +84,25 @@ export class PostgresClient {
                 operation: 'PostgresClient.update',
             });
             return false;
+        }
+    }
+
+    async runMigrations(): Promise<void> {
+        await this.connect();
+
+        let migrationNumber = 1;
+        try {
+            for (let mg of migrations) {
+                await this.pool.query(mg);
+                migrationNumber += 1;
+            }
+        } catch (error) {
+            this.logger.error({
+                error,
+                failedQueryNo: migrationNumber,
+                operation: 'PostgresClient.runMigrations',
+            });
+            throw error;
         }
     }
 

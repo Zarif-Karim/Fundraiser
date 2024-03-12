@@ -8,6 +8,7 @@
     "start:built": "node dist/app.js",
     "start": "ts-node-dev src/app.ts",
     "start:all": "docker-compose up -d && npm run start",
+    "stop": "docker-compose down",
     "test": "NODE_ENV=test PORT=7788 jest --runInBand --forceExit",
     "test:watch": "npm run test -- --watch",
     "format:staged": "pretty-quick --staged",

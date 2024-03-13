@@ -3,10 +3,10 @@ import { PostgresClient } from '../postgres';
 import { User } from '../../components/user';
 import config from '../../config';
 
+jest.mock('../postgres');
 const store = new PostgresClient(config.POSTGRES);
 
-// TODO: need to fix test logic
-describe.skip('UserStore', () => {
+describe('UserStore', () => {
     const userStore = new UserStore(store);
     const dummyUser = new User(
         '1',
@@ -18,31 +18,32 @@ describe.skip('UserStore', () => {
 
     describe('create', () => {
         it.each([
-            [true, ''],
-            [false, 'not '],
-        ])('returns %s if the user is %screated', async (val, _) => {
+            ['user', '', true, dummyUser],
+            ['undefined', 'not ', false, undefined],
+        ])('returns %s if %screated', async (__, _, storeRet, toExpect) => {
             // Arrange
-            store.add = jest.fn().mockResolvedValue(val);
+            jest.spyOn(store, 'add').mockResolvedValue(storeRet);
             // Act
-            // const success = await userStore.create(dummyUser);
+            const result = await userStore.create(dummyUser.id, dummyUser);
             // Assert
-            // expect(success).toBe(val);
+            expect(result).toEqual(toExpect);
         });
     });
 
     describe('get', () => {
         it('calls the store with the provided id', async () => {
             // Arrange
-            store.get = jest.fn().mockResolvedValue({});
+            const getSpy = jest.spyOn(store, 'get');
             // Act
             await userStore.get('1');
             // Assert
-            expect(store.get).toHaveBeenCalledWith('users:1');
+            expect(getSpy).toHaveBeenCalledTimes(1);
+            expect(getSpy.mock.calls[0][0].values).toEqual(['1']);
         });
 
         it('returns undefined if the user is not found', async () => {
             // Arrange
-            store.get = jest.fn().mockResolvedValue({});
+            store.get = jest.fn().mockResolvedValue(undefined);
             // Act
             const user = await userStore.get('1');
             // Assert
@@ -51,11 +52,11 @@ describe.skip('UserStore', () => {
 
         it('returns the user if found', async () => {
             // Arrange
-            // store.get = jest.fn().mockResolvedValue(dummyUser.info());
+            store.get = jest.fn().mockResolvedValue(User.info(dummyUser));
             // Act
-            // const user = await userStore.get('1');
+            const user = await userStore.get('1');
             // Assert
-            // expect(user).toEqual(dummyUser.info());
+            expect(user).toEqual(dummyUser);
         });
     });
 });

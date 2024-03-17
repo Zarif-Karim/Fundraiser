@@ -35,6 +35,14 @@ export class UserStore {
         }
         return User.fromDatabase(user);
     }
+
+    async getByEmail(email: string): Promise<User | undefined> {
+        const user = await this.store.get(getSingleUserByEmailQuery(email));
+        if (!user) {
+            return undefined;
+        }
+        return User.fromDatabase(user);
+    }
 }
 
 // SQL queries
@@ -49,6 +57,9 @@ const createUserQuery = (
 
 const getSingleUserByIdQuery = (id: string) =>
     sql.unsafe`SELECT * FROM users WHERE id = ${id}`;
+
+const getSingleUserByEmailQuery = (email: string) =>
+    sql.unsafe`SELECT * FROM users WHERE email = ${email}`;
 
 // for debugging
 const getAllUsersQuery = () => sql.unsafe`SELECT * FROM users;`;

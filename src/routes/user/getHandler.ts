@@ -1,10 +1,17 @@
+import { User } from '../../components/user';
 import { ExtendedContext } from '../../context';
 
 export async function getHandler(ctx: ExtendedContext) {
-    const { id } = ctx.params;
+    // only one of the will be defined
+    const { id, email } = ctx.params;
 
     try {
-        const user = await ctx.userService.get(id);
+        let user: User | undefined;
+        if (id) {
+            user = await ctx.userService.get(id);
+        } else {
+            user = await ctx.userService.getByEmail(email);
+        }
 
         ctx.status = 200;
         ctx.body = user;

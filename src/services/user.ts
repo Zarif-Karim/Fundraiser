@@ -44,11 +44,7 @@ export class UserService {
     }
 
     async getByEmail(email: string) {
-        // make a call to the database
-
-        // return the user if found
-
-        // return undefined if not found
-        return undefined;
+        const user = await this.userStore.getByEmail(email);
+        return user ? user : undefined;
     }
 }

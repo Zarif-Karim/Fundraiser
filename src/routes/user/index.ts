@@ -15,7 +15,8 @@ router.delete('/delete', async (ctx) => {
     ctx.body = 'delete';
 });
 
-router.get('/:id', getHandler);
+router.get('/id/:id', getHandler);
+router.get('/email/:email', getHandler);
 
 router.get('/batch', async (ctx) => {
     ctx.body = 'batch';

@@ -15,7 +15,9 @@ export async function createHandler(ctx: ExtendedContext) {
     const existingUser = await ctx.userService.getByEmail(user.email);
     if (existingUser) {
         ctx.status = 409;
-        ctx.body = { message: 'User with email already exists' };
+        ctx.body = {
+            message: `User with email "${existingUser.email}" already exists`,
+        };
         return;
     }
 

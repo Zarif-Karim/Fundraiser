@@ -1,0 +1,17 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(29, 29, 27);
+    color: rgb(170, 179, 177);
+}
+
+#user-form {
+    margin-bottom: 20px;
+}
+
+#user-form input {
+    margin: 5px;
+}
+
+#user-list {
+    list-style-type: none;
+}

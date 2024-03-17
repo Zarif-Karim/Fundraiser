@@ -31,7 +31,7 @@ describe('User Routes', () => {
     });
 
     describe('get', () => {
-        it('GET /api/v1/user/:id - should return 200 with user info when user found', async () => {
+        it('GET /api/v1/user/id/:id - should return 200 with user info when user found', async () => {
             // create a user
             const userData = {
                 name: 'John Doe',
@@ -46,7 +46,7 @@ describe('User Routes', () => {
 
             // get the user
             const response = await request(server).get(
-                `/api/v1/user/${createResponse.body.id}`,
+                `/api/v1/user/id/${createResponse.body.id}`,
             );
 
             expect(response.status).toEqual(200);
@@ -56,7 +56,7 @@ describe('User Routes', () => {
         it('GET /api/v1/user/:id - should return 404 user not found', async () => {
             const noUserId = 'bogus-id';
             const response = await request(server).get(
-                `/api/v1/user/${noUserId}`,
+                `/api/v1/user/id/${noUserId}`,
             );
 
             expect(response.status).toEqual(404);

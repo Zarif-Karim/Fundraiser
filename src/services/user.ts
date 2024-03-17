@@ -7,12 +7,7 @@ export class UserService {
 
     async get(id: string): Promise<User | undefined> {
         const user = await this.userStore.get(id);
-
-        if (!user) {
-            throw new Error('User not found');
-        }
-
-        return user;
+        return user ? user : undefined;
     }
 
     // for debugging only: admin use

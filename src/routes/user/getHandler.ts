@@ -13,10 +13,16 @@ export async function getHandler(ctx: ExtendedContext) {
             user = await ctx.userService.getByEmail(email);
         }
 
+        if (!user) {
+            ctx.status = 404;
+            ctx.body = { message: 'User not found' };
+            return;
+        }
+
         ctx.status = 200;
         ctx.body = user;
     } catch (err) {
-        ctx.status = 404;
+        ctx.status = 500;
         ctx.body = (err as Error).message;
 
         ctx.logger.error({ err, operation: 'getUserHandler' });

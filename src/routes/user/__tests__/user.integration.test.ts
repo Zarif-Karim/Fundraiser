@@ -14,7 +14,7 @@ describe('User Routes', () => {
         it('POST /api/v1/user/create - should return 201 with user info when user created', async () => {
             const userData = {
                 name: 'John Doe',
-                email: 'john@email.com',
+                email: 'john-create@email.com',
                 phone: '1234567890',
                 address: '123 Main St',
             };
@@ -35,7 +35,7 @@ describe('User Routes', () => {
             // create a user
             const userData = {
                 name: 'John Doe',
-                email: 'john@email.com',
+                email: 'john-read@email.com',
                 phone: '1234567890',
                 address: '123 Main St',
             };

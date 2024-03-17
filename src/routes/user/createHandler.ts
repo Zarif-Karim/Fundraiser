@@ -1,10 +1,7 @@
 import { User } from '../../components/user';
 import { ExtendedContext } from '../../context';
-import { uuidv4 } from 'lib0/random';
 
 export async function createHandler(ctx: ExtendedContext) {
-    const id = uuidv4();
-
     // validate request
     const validatedFields = validateRequest(ctx);
     if (!validatedFields.success) {
@@ -14,8 +11,8 @@ export async function createHandler(ctx: ExtendedContext) {
     }
 
     // check for duplication
-    const { name, email, address, phone } = validatedFields;
-    const existingUser = await ctx.userService.getByEmail(email);
+    const { user } = validatedFields;
+    const existingUser = await ctx.userService.getByEmail(user.email);
     if (existingUser) {
         ctx.status = 409;
         ctx.body = { message: 'User with email already exists' };
@@ -24,13 +21,7 @@ export async function createHandler(ctx: ExtendedContext) {
 
     // create user
     try {
-        const newUser = await ctx.userService.create(
-            name,
-            email,
-            phone,
-            address,
-            id,
-        );
+        const newUser = await ctx.userService.create(user);
 
         ctx.status = 201;
         ctx.body = newUser;
@@ -61,19 +52,23 @@ function validateRequest(
 
     return {
         success: true,
-        name,
-        email,
-        address,
-        phone,
+        user: {
+            name,
+            email,
+            address: address || '',
+            phone,
+        },
     };
 }
 
 type ValidationSuccess = {
     success: true;
-    name: string;
-    email: string;
-    address?: string;
-    phone: string;
+    user: {
+        name: string;
+        email: string;
+        address: string;
+        phone: string;
+    };
 };
 
 type ValidationFailure = {

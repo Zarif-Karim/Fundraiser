@@ -1,3 +1,4 @@
+import { uuidv4 } from 'lib0/random';
 import { User } from '../components/user';
 import { UserStore } from '../storage/user';
 
@@ -5,29 +6,25 @@ export class UserService {
     constructor(private readonly userStore: UserStore) {}
 
     async get(id: string): Promise<User | undefined> {
-        const userData = await this.userStore.get(id);
+        const user = await this.userStore.get(id);
 
-        if (!userData) {
+        if (!user) {
             throw new Error('User not found');
         }
 
-        return User.fromDatabase(userData);
+        return user;
     }
 
-    async create(
-        name: string,
-        email: string,
-        phone: string,
-        address?: string,
-        id?: string,
-    ): Promise<User> {
-        if (!id) {
-            throw new Error('id is required');
-        }
+    // for debugging only: admin use
+    async getAll(): Promise<User[]> {
+        return await this.userStore.getAll();
+    }
 
-        const user = new User(id, name, email, phone, address);
-        const success = await this.userStore.create(user);
-        if (!success) {
+    async create(userDetails: Omit<User, 'id'>): Promise<User> {
+        const id = uuidv4();
+
+        const user = await this.userStore.create(id, userDetails);
+        if (!user) {
             throw new Error('Failed to create user');
         }
 
@@ -39,7 +36,7 @@ export class UserService {
     }
 
     async delete(id: string) {
-        return;
+        return undefined;
     }
 
     async batchGet(ids: string[]) {

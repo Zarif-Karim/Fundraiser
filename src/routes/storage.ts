@@ -1,53 +1,67 @@
 import Router from 'koa-router';
 import { ExtendedContext } from '../context';
-import { RedisStorage } from '../storage/redis';
-import { IStorageKey, IStorageValue } from '../storage/types';
 import { User } from '../components/user';
 
 const router = new Router<unknown, ExtendedContext>();
 
-// routes for storage testing
-const redisStorage = new RedisStorage();
-
-router.get('/redis/get/:id', async (ctx: ExtendedContext) => {
-    const id = ctx.params.id;
-    const result = await redisStorage.get(id);
-
-    ctx.body = result;
-    return;
-});
-
-router.post('/redis/add', async (ctx: ExtendedContext) => {
-    const { id, value } = ctx.request.body as {
-        id: IStorageKey;
-        value: IStorageValue;
-    };
-
-    const success = await redisStorage.add(id, value);
-    if (!success) {
+router.get('/get/all', async (ctx: ExtendedContext) => {
+    try {
+        const users = await ctx.userService.getAll();
+        ctx.body = { users };
+    } catch (err) {
         ctx.status = 500;
-        ctx.body = 'Failed to add to redis';
-        return;
+        ctx.body = (err as Error).message;
     }
-
-    ctx.status = 201;
-    ctx.body = 'Added to redis';
-    return;
 });
 
-router.delete('/redis/remove/:id', async (ctx: ExtendedContext) => {
+router.get('/get/:id', async (ctx: ExtendedContext) => {
+    const id = ctx.params.id;
+    try {
+        ctx.body = await ctx.userService.get(id);
+        return;
+    } catch (err) {
+        if ((err as Error).message === 'User not found') {
+            ctx.status = 404;
+            ctx.body = (err as Error).message;
+            return;
+        }
+
+        throw err;
+    }
+});
+
+router.post('/add', async (ctx: ExtendedContext) => {
+    const userDetails = ctx.request.body as User;
+    try {
+        const success = await ctx.userService.create(userDetails);
+        if (!success) {
+            ctx.status = 500;
+            ctx.body = 'Failed to add to postgres';
+            return;
+        }
+
+        ctx.status = 201;
+        ctx.body = User.info(success);
+        return;
+    } catch (err) {
+        ctx.status = 500;
+        ctx.body = (err as Error).message;
+    }
+});
+
+router.delete('/remove/:id', async (ctx: ExtendedContext) => {
     const id = ctx.params.id;
 
-    const success = await redisStorage.remove(id);
+    const success = await ctx.userService.delete(id);
 
     if (!success) {
         ctx.status = 500;
-        ctx.body = 'Failed to delete from redis';
+        ctx.body = 'Failed to delete from postgres';
         return;
     }
 
     ctx.status = 204;
-    ctx.body = 'Deleted from redis';
+    ctx.body = 'Deleted from postgres';
     return;
 });
 

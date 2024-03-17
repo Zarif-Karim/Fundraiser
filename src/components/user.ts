@@ -1,4 +1,4 @@
-import { IStorageValue } from '../storage/types';
+import { UserTablePayload } from '../storage/types';
 
 export class User {
     // unique identifier
@@ -30,17 +30,17 @@ export class User {
         this.phone = phone;
     }
 
-    info(): { [key: string]: string } {
+    static info(user: User): { [key: string]: string } {
         return {
-            id: this.id,
-            name: this.name,
-            email: this.email,
-            phone: this.phone,
-            address: this.address || '',
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            address: user.address || '',
         };
     }
 
-    static fromDatabase(data: IStorageValue): User {
+    static fromDatabase(data: UserTablePayload): User {
         return new User(
             data.id,
             data.name,

@@ -1,28 +1,54 @@
 import { User } from '../components/user';
-import { RedisStorage } from './redis';
-import { IStorageValue } from './types';
+import { PostgresClient } from './postgres';
+import { sql } from 'slonik';
+import { UserTablePayload } from './types';
 
-const isEmptyObject = (obj: Object) => {
-    return !obj || Object.keys(obj).length === 0;
-};
+const USER_TABLE = 'users';
 
 export class UserStore {
-    prefixKey = 'users';
-    constructor(private store: RedisStorage) {}
+    constructor(private store: PostgresClient) {}
 
-    private createKey(key: string) {
-        return `${this.prefixKey}:${key}`;
-    }
-
-    async create(user: User): Promise<boolean> {
-        return await this.store.add(this.createKey(user.id), user.info());
-    }
-
-    async get(id: string): Promise<IStorageValue | undefined> {
-        const user = await this.store.get(this.createKey(id));
-        if (isEmptyObject(user)) {
+    async create(
+        id: string,
+        userDetails: Omit<User, 'id'>,
+    ): Promise<User | undefined> {
+        const success = await this.store.add(createUserQuery(id, userDetails));
+        if (!success) {
             return undefined;
         }
-        return user;
+
+        const { name, email, phone, address } = userDetails;
+        return new User(id, name, email, phone, address);
+    }
+
+    // for debugging
+    async getAll(): Promise<User[]> {
+        const query = getAllUsersQuery();
+        const users = await this.store.getAllFromTable(query);
+        return users.map((user) => User.fromDatabase(user as UserTablePayload));
+    }
+
+    async get(id: string): Promise<User | undefined> {
+        const user = await this.store.get(getSingleUserByIdQuery(id));
+        if (!user) {
+            return undefined;
+        }
+        return User.fromDatabase(user);
     }
 }
+
+// SQL queries
+const createUserQuery = (
+    id: string,
+    { name, email, phone, address }: Omit<User, 'id'>,
+) => {
+    return sql.unsafe`INSERT INTO users (
+               id, name, email, phone, address, createdAt, updatedAt) VALUES 
+            (${id}, ${name}, ${email}, ${phone}, ${address || ''}, NOW(), NOW())`;
+};
+
+const getSingleUserByIdQuery = (id: string) =>
+    sql.unsafe`SELECT * FROM users WHERE id = ${id}`;
+
+// for debugging
+const getAllUsersQuery = () => sql.unsafe`SELECT * FROM users;`;

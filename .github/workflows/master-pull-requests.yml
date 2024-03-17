@@ -16,11 +16,20 @@ jobs:
         runs-on: ubuntu-latest
 
         services:
-            redis:
-                image: redis:5.0.5
-                options: --entrypoint redis-server
+            postgres:
+                image: 'postgres:16.2'
                 ports:
-                    - 6379:6379
+                    - '5432:5432'
+                env:
+                    # dummy setup
+                    POSTGRES_USER: 'zkarim'
+                    POSTGRES_PASSWORD: 'postgres'
+                    POSTGRES_DB: 'fundraiser'
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
 
         steps:
             - uses: actions/checkout@v2

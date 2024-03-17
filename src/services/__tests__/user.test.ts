@@ -34,12 +34,10 @@ describe('UserService', () => {
         });
     });
 
-    describe('get', () => {
-        it('should throw an error if user is not found', async () => {
+    describe('get - id', () => {
+        it('should return undefined if user is not found', async () => {
             mockUserStore.get = jest.fn().mockResolvedValue(undefined);
-            await expect(userService.get('id')).rejects.toThrow(
-                'User not found',
-            );
+            await expect(userService.get('id')).resolves.toEqual(undefined);
         });
 
         it('should call the user store with the provided id', async () => {
@@ -57,6 +55,39 @@ describe('UserService', () => {
                 address: 'address',
             });
             const user = await userService.get('id');
+            expect(user).toEqual({
+                id: 'id',
+                name: 'name',
+                email: 'email',
+                phone: 'phone',
+                address: 'address',
+            });
+        });
+    });
+
+    describe('get - email', () => {
+        it('should return undefined if user is not found', async () => {
+            mockUserStore.getByEmail = jest.fn().mockResolvedValue(undefined);
+            await expect(userService.getByEmail('email')).resolves.toEqual(
+                undefined,
+            );
+        });
+
+        it('should call the user store with the provided email', async () => {
+            mockUserStore.getByEmail = jest.fn().mockResolvedValue({});
+            await userService.getByEmail('email');
+            expect(mockUserStore.getByEmail).toHaveBeenCalledWith('email');
+        });
+
+        it('should return the user if found', async () => {
+            mockUserStore.getByEmail = jest.fn().mockResolvedValue({
+                id: 'id',
+                name: 'name',
+                email: 'email',
+                phone: 'phone',
+                address: 'address',
+            });
+            const user = await userService.getByEmail('email');
             expect(user).toEqual({
                 id: 'id',
                 name: 'name',

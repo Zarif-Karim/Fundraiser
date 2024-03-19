@@ -4,6 +4,7 @@ import { UserStore } from '../../storage/user';
 jest.mock('../../storage/user');
 
 const mockUser = {
+    id: '1234',
     name: 'Thanos',
     phone: '4213',
     email: 'halfEarth@world.com',
@@ -28,9 +29,24 @@ describe('UserService', () => {
                 .mockResolvedValue({ ...mockUser, id: 'blah' });
             const user = await userService.create(mockUser);
             expect(user).toEqual({
-                id: expect.any(String),
                 ...mockUser,
+                id: expect.any(String),
             });
+        });
+    });
+
+    describe('update', () => {
+        it('should throw an error if user update fails', async () => {
+            mockUserStore.update = jest.fn().mockResolvedValue(false);
+            await expect(userService.update(mockUser)).rejects.toThrow(
+                'Failed to update user',
+            );
+        });
+
+        it('should return true if update is successful', async () => {
+            mockUserStore.update = jest.fn().mockResolvedValue(true);
+            const success = await userService.update(mockUser);
+            expect(success).toEqual(true);
         });
     });
 

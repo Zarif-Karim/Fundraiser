@@ -17,7 +17,7 @@ export async function updateHandler(ctx: ExtendedContext) {
         await ctx.userService.update(validatedFields.user as User);
 
         ctx.status = 200;
-        ctx.body = { message: 'Update successful' };
+        ctx.body = validatedFields.user;
     } catch (err) {
         ctx.status = 500;
         ctx.body = { message: 'Failed to update user' };

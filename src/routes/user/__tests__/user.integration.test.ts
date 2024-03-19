@@ -38,6 +38,50 @@ describe('User Routes', () => {
         });
     });
 
+    describe('update', () => {
+        it('PUT /api/v1/user/id/:id - should return 200 with user info when user updated', async () => {
+            const userData = createRandomUserData();
+            const createdUser = await request(server)
+                .post('/api/v1/user/create')
+                .send(userData);
+            expect(createdUser.status).toEqual(201);
+
+            const updatedUserData = {
+                ...createdUser.body,
+                name: 'John Updated',
+                phone: '0987654321',
+                address: '321 Main St',
+            };
+            const updateResponse = await request(server)
+                .put(`/api/v1/user/id/${createdUser.body.id}`)
+                .send(updatedUserData);
+
+            expect(updateResponse.status).toEqual(200);
+            expect(updateResponse.body).toEqual(updatedUserData);
+        });
+
+        it('PUT /api/v1/user/email/:email - should return 200 with user info when user updated', async () => {
+            const userData = createRandomUserData();
+            const createdUser = await request(server)
+                .post('/api/v1/user/create')
+                .send(userData);
+            expect(createdUser.status).toEqual(201);
+
+            const updatedUserData = {
+                ...createdUser.body,
+                name: 'John Updated',
+                phone: '0987654321',
+                address: '321 Main St',
+            };
+            const updateResponse = await request(server)
+                .put(`/api/v1/user/email/${createdUser.body.email}`)
+                .send(updatedUserData);
+
+            expect(updateResponse.status).toEqual(200);
+            expect(updateResponse.body).toEqual(updatedUserData);
+        });
+    });
+
     describe('get', () => {
         // generated user data to be used in get tests
         let userData: User;

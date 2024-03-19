@@ -32,6 +32,20 @@ describe('UserStore', () => {
         });
     });
 
+    describe('update', () => {
+        it.each([
+            [true, ''],
+            [false, 'not '],
+        ])('returns %s if the user is %supdated', async (storeRet) => {
+            // Arrange
+            jest.spyOn(store, 'update').mockResolvedValue(storeRet);
+            // Act
+            const result = await userStore.update(dummyUser);
+            // Assert
+            expect(result).toBe(storeRet);
+        });
+    });
+
     describe('get - id', () => {
         it('calls the store with the provided id', async () => {
             // Arrange

@@ -2,14 +2,14 @@ import Router from 'koa-router';
 import { createHandler } from './createHandler';
 import { ExtendedContext } from '../../context';
 import { getHandler } from './getHandler';
+import { updateHandler } from './updateHandler';
 
 const router = new Router<unknown, ExtendedContext>();
 
 router.post('/create', createHandler);
 
-router.put('/update', async (ctx) => {
-    ctx.body = 'update';
-});
+router.put('/id/:id', updateHandler);
+router.put('/email/:id', updateHandler);
 
 router.delete('/delete', async (ctx) => {
     ctx.body = 'delete';

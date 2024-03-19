@@ -11,6 +11,7 @@ export default function attachServices(app: Koa<unknown, ExtendedContext>) {
 
     ctx.logger = process.env.NODE_ENV === 'test' ? NoLogConsole : console;
     ctx.db = new PostgresClient(config.POSTGRES, ctx.logger);
+    ctx.db.connect();
 
     const userStore = new UserStore(ctx.db);
     ctx.userService = new UserService(userStore);

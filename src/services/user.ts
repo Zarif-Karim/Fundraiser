@@ -26,8 +26,12 @@ export class UserService {
         return user;
     }
 
-    async update(id: string, user: User) {
-        return;
+    async update(user: User) {
+        const success = await this.userStore.update(user);
+        if (!success) {
+            throw new Error('Failed to update user');
+        }
+        return success;
     }
 
     async delete(id: string) {

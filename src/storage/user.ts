@@ -43,6 +43,10 @@ export class UserStore {
         }
         return User.fromDatabase(user);
     }
+
+    async update(userDetails: User) {
+        return await this.store.update(updateUserQuery(userDetails));
+    }
 }
 
 // SQL queries
@@ -60,6 +64,12 @@ const getSingleUserByIdQuery = (id: string) =>
 
 const getSingleUserByEmailQuery = (email: string) =>
     sql.unsafe`SELECT * FROM users WHERE email = ${email}`;
+
+const updateUserQuery = ({ id, name, email, phone, address }: User) => {
+    return sql.unsafe`UPDATE users
+    SET name = ${name}, email = ${email}, phone = ${phone}, address = ${address || ''}, updatedAt = NOW()
+    WHERE id = ${id}`;
+};
 
 // for debugging
 const getAllUsersQuery = () => sql.unsafe`SELECT * FROM users;`;

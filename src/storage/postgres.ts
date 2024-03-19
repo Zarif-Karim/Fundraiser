@@ -75,12 +75,12 @@ export class PostgresClient {
         }
     }
 
-    async update(query: string, params: any[] = []): Promise<boolean> {
+    async update(query: QuerySqlToken): Promise<boolean> {
         await this.connect();
 
         try {
-            await this.pool.query(sql.unsafe`${query}`, params);
-            return true;
+            const result = await this.pool.query(query);
+            return result.rowCount === 1;
         } catch (error) {
             this.logger.error({
                 error,

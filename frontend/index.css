@@ -4,14 +4,36 @@ body {
     color: rgb(170, 179, 177);
 }
 
-#user-form {
+#user-form,
+#update-user-form {
     margin-bottom: 20px;
 }
 
-#user-form input {
+#user-form,
+#update-user-form input {
     margin: 5px;
+}
+
+/* update user for appears in the middle of the window with a shadow box */
+#update-user-form {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    color: brown;
 }
 
 #user-list {
     list-style-type: none;
+}
+
+td,
+th {
+    padding: 5px;
+    border-bottom: 1px solid rgb(170, 179, 177);
+    border-right: 1px solid rgb(170, 179, 177);
 }

@@ -17,11 +17,33 @@
             <button id="submit-btn">Submit</button>
         </div>
 
+        <div id="update-user-form">
+            <h2>User form</h2>
+            <input type="text" id="update-id" placeholder="Id" />
+            <input type="text" id="update-name" placeholder="Name" />
+            <input type="email" id="update-email" placeholder="Email" />
+            <input type="text" id="update-phone" placeholder="Phone" />
+            <input type="text" id="update-address" placeholder="Address" />
+            <button id="update-submit-btn">Submit</button>
+        </div>
+
         <div id="user-container">
             <h2>Users</h2>
-            <ul id="user-list">
-                <!-- Users will be dynamically added here -->
-            </ul>
+            <table id="user-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="user-rows">
+                    <!-- Users will be dynamically added here -->
+                </tbody>
+            </table>
         </div>
         <script src="app.js"></script>
     </body>
